@@ -2,15 +2,12 @@
 require 'connection.php';
 $connect = Connect();
 
-// Process form submission
 if(isset($_POST['submit'])) {
     try {
-        // Sanitize and validate inputs
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
 
-        // If no errors, proceed with insertion
         if(empty($errors)) {
             $query = "INSERT INTO contacts (name, email, phone) VALUES (:name, :email, :phone)";
             $statement = $connect->prepare($query);
@@ -23,7 +20,6 @@ if(isset($_POST['submit'])) {
 
             $statement->execute($data);
 
-            // Redirect to index with success message
             header('Location: index.php?success=added');
             exit;
         }
@@ -54,7 +50,6 @@ if(isset($_POST['submit'])) {
         </div>
 
         <?php
-        // Display any errors
         if(!empty($errors)) {
             echo '<div class="alert alert-danger" role="alert">';
             echo '<ul class="mb-0">';
@@ -65,7 +60,6 @@ if(isset($_POST['submit'])) {
             echo '</div>';
         }
 
-        // Display database error if any
         if(isset($error_message)) {
             echo '<div class="alert alert-danger" role="alert">' . $error_message . '</div>';
         }
@@ -113,7 +107,6 @@ if(isset($_POST['submit'])) {
         let phone = document.getElementById('phone').value;
         let isValid = true;
 
-        // Clear previous error messages
         document.getElementById('nameError').textContent = '';
         document.getElementById('emailError').textContent = '';
         document.getElementById('phoneError').textContent = '';

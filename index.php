@@ -24,7 +24,6 @@ $connect = Connect();
         </div>
 
         <?php
-        // Display success message if set
         if(isset($_GET['success'])) {
             echo '<div class="alert alert-success" role="alert">';
             if($_GET['success'] == 'added') {

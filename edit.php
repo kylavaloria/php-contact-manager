@@ -2,7 +2,6 @@
 require 'connection.php';
 $connect = Connect();
 
-// Check if ID parameter exists
 if(!isset($_GET['id']) || empty($_GET['id'])) {
     header('Location: index.php');
     exit;
@@ -10,15 +9,12 @@ if(!isset($_GET['id']) || empty($_GET['id'])) {
 
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-// Process form submission
 if(isset($_POST['submit'])) {
     try {
-        // Sanitize and validate inputs
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
 
-        // Basic validation
         $errors = [];
         if(empty($name)) {
             $errors[] = "Name is required";
@@ -32,7 +28,6 @@ if(isset($_POST['submit'])) {
             $errors[] = "Phone number is required";
         }
 
-        // If no errors, proceed with update
         if(empty($errors)) {
             $query = "UPDATE contacts SET name = :name, email = :email, phone = :phone WHERE id = :id";
             $statement = $connect->prepare($query);
@@ -46,7 +41,6 @@ if(isset($_POST['submit'])) {
 
             $statement->execute($data);
 
-            // Redirect to index with success message
             header('Location: index.php?success=updated');
             exit;
         }
@@ -54,7 +48,6 @@ if(isset($_POST['submit'])) {
         $error_message = "Error: " . $e->getMessage();
     }
 } else {
-    // Fetch contact data for display in the form
     try {
         $query = "SELECT * FROM contacts WHERE id = :id";
         $statement = $connect->prepare($query);
@@ -64,7 +57,6 @@ if(isset($_POST['submit'])) {
         $contact = $statement->fetch(PDO::FETCH_OBJ);
 
         if(!$contact) {
-            // Contact not found
             header('Location: index.php');
             exit;
         }
@@ -95,7 +87,6 @@ if(isset($_POST['submit'])) {
         </div>
 
         <?php
-        // Keep database error display if needed
         if(isset($error_message)) {
             echo '<div class="alert alert-danger" role="alert">' . $error_message . '</div>';
         }
@@ -143,7 +134,6 @@ if(isset($_POST['submit'])) {
         let phone = document.getElementById('phone').value;
         let isValid = true;
 
-        // Clear previous error messages
         document.getElementById('nameError').textContent = '';
         document.getElementById('emailError').textContent = '';
         document.getElementById('phoneError').textContent = '';
